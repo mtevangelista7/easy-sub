@@ -2,6 +2,7 @@ package cli
 
 import (
 	"bufio"
+	"easysub/internal/api"
 	"easysub/internal/io"
 	"fmt"
 	"os"
@@ -43,4 +44,18 @@ func AskForFileName(fileNames []string) string {
 
 	// retorna o nome do filme
 	return movieName
+}
+
+func GetMovieIdByName(fileName string) (string, error) {
+	if fileName == "" {
+		return "", nil
+	}
+
+	movie, err := api.GetMovieInfo(fileName)
+
+	if err != nil {
+		return "", err
+	}
+
+	return movie.ImdbID, nil
 }

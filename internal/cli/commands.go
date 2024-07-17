@@ -2,6 +2,8 @@ package cli
 
 import (
 	"fmt"
+	"log"
+
 	"github.com/spf13/cobra"
 )
 
@@ -27,7 +29,14 @@ var findCmd = &cobra.Command{
 
 		fmt.Printf("Nome do filme: %s\n", nameFile)
 
-		// mandar para a api e começar a buscar pela legenda
+		// search for movie id
+		movieId, err := GetMovieIdByName(nameFile)
+
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		// manda para a api de legendas
 	},
 }
 
