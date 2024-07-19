@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-const videoExtensions = ".mp4 .avi .mkv .mov .wmv .flv"
+const videoExtensions string = ".mp4 .avi .mkv .mov .wmv .flv"
 
 func SearchAllFileName(path string) ([]string, error) {
 	// Verifica se o diretorio existe
@@ -29,7 +29,7 @@ func SearchAllFileName(path string) ([]string, error) {
 	// preenche o slice com o nome de todos os arquivos
 	for i, file := range files {
 		if isVideoFile(file.Name()) {
-			filesNames[i] = file.Name()
+			filesNames[i] = strings.Split(file.Name(), ".")[0]
 		}
 	}
 

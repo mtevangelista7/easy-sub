@@ -66,7 +66,7 @@ func AskForFileName(fileNames []string) (string, error) {
 func GetMovieIdByName(fileName string) (string, error) {
 	if fileName == "" {
 		log.Print("Não foi possível buscar o ID pois, o nome do filme está em branco")
-		return "", errors.New("O nome do filme não pode ficar em branco!")
+		return "", errors.New("o nome do filme não pode ficar em branco")
 	}
 
 	movie, err := api.GetMovieInfo(fileName)
@@ -85,7 +85,7 @@ func GetMovieIdByName(fileName string) (string, error) {
 func Login(username, password string) (string, error) {
 	if username == "" || password == "" {
 		log.Print("As informações de login não foram preenhcidas")
-		return "", errors.New("As informações de login não foram preenchidas!")
+		return "", errors.New("as informações de login não foram preenchidas")
 	}
 
 	token, err := api.LoginOpenSub(username, password)

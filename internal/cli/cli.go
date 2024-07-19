@@ -16,7 +16,7 @@ as operações desejadas.`,
 
 func Execute() error {
 	if err := rootCmd.Execute(); err != nil {
-		return fmt.Errorf("Erro:%w", err)
+		return fmt.Errorf("Erro: %w", err)
 	}
 
 	return nil

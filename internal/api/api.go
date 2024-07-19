@@ -16,22 +16,35 @@ type Movie struct {
 	ImdbID string `json:"imdbID"`
 }
 
+type LoginResponse struct {
+	Token string `json:"token"`
+}
+
 func GetMovieInfo(title string) (*Movie, error) {
-	// create the url
 	url := fmt.Sprintf("http://www.omdbapi.com/?apikey=%s&t=%s", apiKeyOmdb, title)
 
-	// make the GET request
-	response, err := http.Get(url)
+	resp, err := http.Get(url)
 
 	if err != nil {
 		return nil, fmt.Errorf("error making GET request: %v", err)
 	}
 
-	// close body after this function be executed
-	defer response.Body.Close()
+	if resp.StatusCode != http.StatusOK {
+		// Tratar o erro de status HTTP não esperado
+		fmt.Printf("Erro: Status %d - %s\n", resp.StatusCode, http.StatusText(resp.StatusCode))
 
-	// read the body
-	body, err := io.ReadAll(response.Body)
+		body, _ := io.ReadAll(resp.Body)
+
+		fmt.Println("Resposta:", string(body))
+
+		return nil, err
+	}
+
+	// fecha o body após essa função ser executada
+	defer resp.Body.Close()
+
+	// realiza a leitura do body
+	body, err := io.ReadAll(resp.Body)
 
 	if err != nil {
 		return nil, fmt.Errorf("error reading response body: %v", err)
@@ -47,10 +60,6 @@ func GetMovieInfo(title string) (*Movie, error) {
 
 	// return the pointer to movie and without error
 	return &movie, nil
-}
-
-type LoginResponse struct {
-	Token string `json:"token"`
 }
 
 func LoginOpenSub(username, password string) (string, error) {
@@ -84,7 +93,19 @@ func LoginOpenSub(username, password string) (string, error) {
 		return "", err
 	}
 
+	if res.StatusCode != http.StatusOK {
+		// Tratar o erro de status HTTP não esperado
+		fmt.Printf("Erro: Status %d - %s\n", res.StatusCode, http.StatusText(res.StatusCode))
+
+		body, _ := io.ReadAll(res.Body)
+
+		fmt.Println("Resposta:", string(body))
+
+		return "", err
+	}
+
 	defer res.Body.Close()
+
 	body, err := io.ReadAll(res.Body)
 
 	if err != nil {
@@ -116,6 +137,17 @@ func GetSubByImdbId(userToken, imdb_id string) (string, error) {
 	res, err := http.DefaultClient.Do(req)
 
 	if err != nil {
+		return "", err
+	}
+
+	if res.StatusCode != http.StatusOK {
+		// Tratar o erro de status HTTP não esperado
+		fmt.Printf("Erro: Status %d - %s\n", res.StatusCode, http.StatusText(res.StatusCode))
+
+		body, _ := io.ReadAll(res.Body)
+
+		fmt.Println("Resposta:", string(body))
+
 		return "", err
 	}
 
