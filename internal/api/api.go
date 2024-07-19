@@ -101,19 +101,34 @@ func LoginOpenSub(username, password string) (string, error) {
 	return loginResponse.Token, nil
 }
 
-func GetSubByImdbId(userToken, imdb_id string) {
+func GetSubByImdbId(userToken, imdb_id string) (string, error) {
 	url := fmt.Sprintf("https://api.opensubtitles.com/api/v1/subtitles?imdb_id=%s", imdb_id)
 
-	req, _ := http.NewRequest("GET", url, nil)
+	req, err := http.NewRequest("GET", url, nil)
+
+	if err != nil {
+		return "", err
+	}
 
 	req.Header.Add("User-Agent", "easysub v0.0.1")
 	req.Header.Add("Api-Key", apiKeyOpenSub)
 
-	res, _ := http.DefaultClient.Do(req)
+	res, err := http.DefaultClient.Do(req)
+
+	if err != nil {
+		return "", err
+	}
 
 	defer res.Body.Close()
-	body, _ := io.ReadAll(res.Body)
+
+	body, err := io.ReadAll(res.Body)
+
+	if err != nil {
+		return "", err
+	}
 
 	fmt.Println(res)
 	fmt.Println(string(body))
+
+	return string(body), nil
 }

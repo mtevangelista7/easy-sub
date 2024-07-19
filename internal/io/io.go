@@ -7,23 +7,23 @@ import (
 	"strings"
 )
 
-func SearchAllFileName(path string) []string {
+const videoExtensions = ".mp4 .avi .mkv .mov .wmv .flv"
+
+func SearchAllFileName(path string) ([]string, error) {
 	// Verifica se o diretorio existe
 	if _, err := os.Stat(path); os.IsNotExist(err) {
-		log.Fatalf("Não existe: %s", path)
-		return nil
+		log.Printf("O diretório informado não existe: %s", path)
+		return nil, err
 	}
 
-	// realiza a leitura do diretorio
 	files, err := os.ReadDir(path)
 
-	// caso tenha erro
 	if err != nil {
-		log.Fatalf("sla %s", err)
-		return nil
+		log.Printf("Não foi possível realizar a leitura do diretório: %s", path)
+		return nil, err
 	}
 
-	// cria um slice de strings
+	// cria um slice de strings com o tamanho da quantidade de arquivos
 	filesNames := make([]string, len(files))
 
 	// preenche o slice com o nome de todos os arquivos
@@ -34,13 +34,10 @@ func SearchAllFileName(path string) []string {
 	}
 
 	// retorna todos os nomes
-	return filesNames
+	return filesNames, nil
 }
 
 func isVideoFile(fileName string) bool {
-	// String com extensões de vídeo comuns, separadas por espaços
-	videoExtensions := ".mp4 .avi .mkv .mov .wmv .flv"
-
 	// Obtém a extensão do arquivo
 	ext := strings.ToLower(filepath.Ext(fileName))
 
