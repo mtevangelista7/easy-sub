@@ -36,7 +36,14 @@ var findCmd = &cobra.Command{
 			log.Fatal(err)
 		}
 
-		// manda para a api de legendas
+		userToken, err := Login("evangelistamt7", "mtsec@1920")
+
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		// manda api filmes
+		GetSub(userToken, movieId)
 	},
 }
 

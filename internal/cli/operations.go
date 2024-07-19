@@ -59,3 +59,17 @@ func GetMovieIdByName(fileName string) (string, error) {
 
 	return movie.ImdbID, nil
 }
+
+func Login(username, password string) (string, error) {
+	token, err := api.LoginOpenSub(username, password)
+
+	if err != nil {
+		return "", nil
+	}
+
+	return token, nil
+}
+
+func GetSub(userToken, imdbID string) {
+	api.GetSubByImdbId(userToken, imdbID)
+}

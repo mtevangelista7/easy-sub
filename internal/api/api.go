@@ -8,8 +8,8 @@ import (
 	"net/http"
 )
 
-const apiKeyOmdb string = "a24f82d6LLL"
-const apiKeyOpenSub string = "mqGeQypQuxBs5bJG4pkq0Fj6Q4XKWF7bCCC"
+const apiKeyOmdb string = ""
+const apiKeyOpenSub string = ""
 
 type Movie struct {
 	Title  string `json:"Title"`
@@ -18,7 +18,7 @@ type Movie struct {
 
 func GetMovieInfo(title string) (*Movie, error) {
 	// create the url
-	url := fmt.Sprintf("http://www.omdbapi.com/?t=%s&apikey=%s", title, apiKeyOmdb)
+	url := fmt.Sprintf("http://www.omdbapi.com/?apikey=%s&t=%s", apiKeyOmdb, title)
 
 	// make the GET request
 	response, err := http.Get(url)
@@ -74,7 +74,7 @@ func LoginOpenSub(username, password string) (string, error) {
 	}
 
 	req.Header.Add("Content-Type", "application/json")
-	req.Header.Add("User-Agent", "")
+	req.Header.Add("User-Agent", "easysub v0.0.1")
 	req.Header.Add("Accept", "application/json")
 	req.Header.Add("Api-Key", apiKeyOpenSub)
 
@@ -99,4 +99,21 @@ func LoginOpenSub(username, password string) (string, error) {
 	}
 
 	return loginResponse.Token, nil
+}
+
+func GetSubByImdbId(userToken, imdb_id string) {
+	url := fmt.Sprintf("https://api.opensubtitles.com/api/v1/subtitles?imdb_id=%s", imdb_id)
+
+	req, _ := http.NewRequest("GET", url, nil)
+
+	req.Header.Add("User-Agent", "easysub v0.0.1")
+	req.Header.Add("Api-Key", apiKeyOpenSub)
+
+	res, _ := http.DefaultClient.Do(req)
+
+	defer res.Body.Close()
+	body, _ := io.ReadAll(res.Body)
+
+	fmt.Println(res)
+	fmt.Println(string(body))
 }
